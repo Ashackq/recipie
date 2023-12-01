@@ -4,25 +4,15 @@ const tController = require("../controllers/teachersController");
 
 const router = express.Router();
 
-router.route("/").get(tController.getAllteachers);
-// .post(
-//   authController.protect,
-//   authController.restrictTo("admin", "canteen"),
-//   canteenItemController.createItem
-// );
+router.route("/").get(tController.getAllteachers).post(
+  // authController.protect,
+  // authController.restrictTo("admin", "canteen"),
+  tController.createTeacher
+);
+
+router.route("/:id");
 
 module.exports = router;
-
-// app.get("/recipes", (req, res) => {
-//   const q = "SELECT * FROM recipes";
-//   db.query(q, (err, data) => {
-//     if (err) {
-//       console.log(err);
-//       return res.json(err);
-//     }
-//     return res.json(data);
-//   });
-// });
 
 // app.get("/recipes/:id", (req, res) => {
 //     const q = "SELECT * FROM recipes where recipieID = (?)";

@@ -29,7 +29,7 @@ exports.getAll = () =>
       });
     } catch (err) {
       console.error(err);
-      // return next(new AppError("Error fetching data from the database", 500));
+      return next(new AppError("Error fetching data from the database", 500));
     }
   });
 
@@ -70,17 +70,16 @@ exports.getOne = (Model, popOptions) =>
 // Create One Record
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const { body } = req;
-
-    const query = `INSERT INTO ${Model} SET ?`;
+    const values = [req.body.title, req.body.descp, req.body.price];
+    const query = `INSERT INTO ${Model} (title, descp, price) VALUES (?)`;
 
     try {
-      const result = await db.promise().query(query, body);
+      const result = await db.promise().query(query, [values]);
 
       res.status(201).json({
         status: "success",
         data: {
-          data: { id: result[0].insertId, ...body },
+          data: { id: result[0].insertId, ...req.body },
         },
       });
     } catch (err) {
