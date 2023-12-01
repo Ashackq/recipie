@@ -1,7 +1,7 @@
-CREATE DATABASE Projectl;
+create database Projectl;
 USE Projectl;
 CREATE TABLE teachers (
-  teacher_id INT PRIMARY KEY,
+  teacher_id INT PRIMARY KEY auto_increment,
   years_of_experience INT,
   gender VARCHAR(10),
   name VARCHAR(100),
@@ -14,6 +14,8 @@ CREATE TABLE teachers (
   roles_id INT,
   committee_id INT
 );
+
+ALTER TABLE teachers AUTO_INCREMENT = 0;
 
 CREATE TABLE location (
   location_id INT PRIMARY KEY,
@@ -96,7 +98,7 @@ BEGIN
   );
 END //
 
--- Procedure to delete a teacher by ID
+
 DELIMITER //
 
 CREATE PROCEDURE DeleteTeacher(
@@ -140,3 +142,54 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+INSERT INTO location (location_id, building, room_number) VALUES
+(1, 'Building A', 'Room 101'),
+(2, 'Building B', 'Room 202'),
+(3, 'Building C', 'Room 303');
+
+INSERT INTO division (division_id, year) VALUES
+(1, 2022),
+(2, 2023),
+(3, 2024);
+
+INSERT INTO courses (course_id, c_description, c_name) VALUES
+(1, 'Introduction to Programming', 'CS101'),
+(2, 'Database Management', 'CS201'),
+(3, 'Web Development', 'CS301');
+
+INSERT INTO department (department_id, d_name) VALUES
+(1, 'Computer Science'),
+(2, 'Mathematics'),
+(3, 'Physics');
+
+INSERT INTO roles (role_id, description) VALUES
+(1, 'Teacher'),
+(2, 'Head of Department'),
+(3, 'Administrator');
+
+INSERT INTO committee (committee_id, com_description, com_name) VALUES
+(1, 'Education Committee', 'EduCom'),
+(2, 'Research Committee', 'ResCom'),
+(3, 'Events Committee', 'EventsCom');
+
+INSERT INTO teachers (
+  years_of_experience,
+  gender,
+  name,
+  email_id,
+  specialization,
+  location_id,
+  division_id,
+  course_id,
+  department_id,
+  roles_id,
+  committee_id
+) VALUES
+(5, 'Male', 'John Doe', 'john.doe@email.com', 'Physics', 1, 2, 1, 3, 1, 2),
+(8, 'Female', 'Jane Smith', 'jane.smith@email.com', 'Mathematics', 2, 1, 2, 1, 2, 1);
+
+
+select * from teachers;
+

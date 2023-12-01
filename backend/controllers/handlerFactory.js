@@ -67,45 +67,35 @@ exports.getOne = (Model, popOptions) =>
     }
   });
 
-exports.getOne = (Model, popOptions) =>
-  catchAsync(async (req, res, next) => {
-    let query = `SELECT * FROM ${Model} WHERE id = ?`;
-
-    if (popOptions) {
-      query = `
-        SELECT ${Model}.*, ${popOptions.map((field) => `${field}`).join(", ")}
-        FROM ${Model}
-        LEFT JOIN ${popOptions.map((field) => `${field}`).join(" LEFT JOIN ")}
-        WHERE ${Model}.id = ?
-      `;
-    }
-
-    const { id } = req.params;
-
-    try {
-      const doc = await db.promise().query(query, [id]);
-
-      if (!doc[0].length) {
-        return next(new AppError("No document found with that ID", 404));
-      }
-
-      res.status(200).json({
-        status: "success",
-        data: {
-          data: doc[0][0],
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      return next(new AppError("Error fetching data from the database", 500));
-    }
-  });
-
-// Create One Record
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const values = [req.body.title, req.body.descp, req.body.price];
-    const query = `INSERT INTO ${Model} (title, descp, price) VALUES (?)`;
+    const values = [
+      req.body.years_of_experience,
+      req.body.gender,
+      req.body.name,
+      req.body.email_id,
+      req.body.specialization,
+      req.body.location_id,
+      req.body.division_id,
+      req.body.course_id,
+      req.body.department_id,
+      req.body.roles_id,
+      req.body.committee_id,
+    ];
+
+    const query = `INSERT INTO ${Model} (
+      years_of_experience,
+      gender,
+      name,
+      email_id,
+      specialization,
+      location_id,
+      division_id,
+      course_id,
+      department_id,
+      roles_id,
+      committee_id
+    ) VALUES (?)`;
 
     try {
       const result = await db.promise().query(query, [values]);
@@ -118,17 +108,16 @@ exports.createOne = (Model) =>
       });
     } catch (err) {
       console.error(err);
-      return next(new AppError("Error creating document in the database", 500));
+      return next(new AppError(err.code, 500));
     }
   });
 
-// Update One Record
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
-
-    const query = `UPDATE ${Model} SET ? WHERE id = ?`;
+    
+    const query = `UPDATE ${Model} SET ? WHERE teacher_id = ?`;
 
     try {
       const result = await db.promise().query(query, [body, id]);
@@ -145,16 +134,15 @@ exports.updateOne = (Model) =>
       });
     } catch (err) {
       console.error(err);
-      return next(new AppError("Error updating document in the database", 500));
+      return next(new AppError(err.code, 500));
     }
   });
 
-// Delete One Record
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
 
-    const query = `DELETE FROM ${Model} WHERE id = ?`;
+    const query = `DELETE FROM ${Model} WHERE teacher_id = ?`;
 
     try {
       const result = await db.promise().query(query, [id]);
