@@ -2,9 +2,9 @@ const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const db = require("../models/db");
 
-exports.getAll = () =>
+exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    const q = "SELECT * FROM recipes";
+    const q = `SELECT * FROM ${Model}`;
 
     const queryPromise = () => {
       return new Promise((resolve, reject) => {
@@ -25,6 +25,40 @@ exports.getAll = () =>
         results: doc.length,
         data: {
           data: doc,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      return next(new AppError("Error fetching data from the database", 500));
+    }
+  });
+
+exports.getOne = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
+    let query = `SELECT * FROM ${Model} WHERE id = ?`;
+
+    if (popOptions) {
+      query = `
+        SELECT ${Model}.*, ${popOptions.map((field) => `${field}`).join(", ")}
+        FROM ${Model}
+        LEFT JOIN ${popOptions.map((field) => `${field}`).join(" LEFT JOIN ")}
+        WHERE ${Model}.id = ?
+      `;
+    }
+
+    const { id } = req.params;
+
+    try {
+      const doc = await db.promise().query(query, [id]);
+
+      if (!doc[0].length) {
+        return next(new AppError("No document found with that ID", 404));
+      }
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          data: doc[0][0],
         },
       });
     } catch (err) {
