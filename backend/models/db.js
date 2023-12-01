@@ -4,7 +4,7 @@ const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: process.env.DBPASSWORD,
-  database: "dbmsproject",
+  database: "Projectl",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

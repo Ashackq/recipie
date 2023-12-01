@@ -29,20 +29,20 @@ exports.getAll = (Model) =>
       });
     } catch (err) {
       console.error(err);
-      return next(new AppError("Error fetching data from the database", 500));
+      return next(new AppError(err.code, 500));
     }
   });
 
 exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    let query = `SELECT * FROM ${Model} WHERE id = ?`;
+    let query = `SELECT * FROM ${Model} WHERE teacher_id = ?`;
 
     if (popOptions) {
       query = `
         SELECT ${Model}.*, ${popOptions.map((field) => `${field}`).join(", ")}
         FROM ${Model}
         LEFT JOIN ${popOptions.map((field) => `${field}`).join(" LEFT JOIN ")}
-        WHERE ${Model}.id = ?
+        WHERE ${Model}.teacher_id = ?
       `;
     }
 
@@ -63,7 +63,7 @@ exports.getOne = (Model, popOptions) =>
       });
     } catch (err) {
       console.error(err);
-      return next(new AppError("Error fetching data from the database", 500));
+      return next(new AppError(err.code, 500));
     }
   });
 

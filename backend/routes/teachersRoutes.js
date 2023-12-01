@@ -10,7 +10,7 @@ router.route("/").get(tController.getAllteachers).post(
   tController.createTeacher
 );
 
-router.route("/:id");
+router.route("/:id").get(tController.getteachersById);
 
 module.exports = router;
 
